@@ -4,7 +4,7 @@
 from trading_bot import *
 from logger import *
 # initialize the logger
-initialize_logger
+initialize_logger()
 
 # check my trading account
 
