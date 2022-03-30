@@ -7,13 +7,14 @@ from datetime import datetime
 
 def initialize_logger():
 
-
     # create folder for logging
-    path = './logs' # define the path
+    logs_path = './logs' # define the path
     try:
-        os.mkdir(path)
+        os.mkdir(logs_path)
     except:
-        print('Creation of directory %s failed' % path)
+        print('Creation of directory %s failed' % logs_path)
+    else:
+        print("Successfully created log directory")
 
     # rename each log depending on the timeout
 
@@ -24,6 +25,5 @@ def initialize_logger():
     # log parameters
 
     lg.basicConfig(filename=log_name, format = '%(asctime)s: %(message)s', level = lg.DEBUG)
-    lg.getLogger().addHandler(lg.StreamHandler())
 
     lg.info('Log initialized')
