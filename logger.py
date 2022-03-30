@@ -8,7 +8,7 @@ from datetime import datetime
 def initialize_logger():
 
     # create folder for logging
-    logs_path = './logs' # define the path
+    logs_path = './logs/' # define the path
     try:
         os.mkdir(logs_path)
     except OSError:
