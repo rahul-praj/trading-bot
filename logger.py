@@ -5,8 +5,11 @@ import logging as lg
 import os
 from datetime import datetime
 
+def initialize_logger():
+
+
 # create folder for logging
-path = './logs'
+path = './logs' # define the path
 try:
     os.mkdir(path)
 except:
@@ -23,9 +26,4 @@ currentLog_path = logs_path + log_name
 lg.basicConfig(filename=log_name, format = '%(asctime)s: %(message)s', level = lg.DEBUG)
 lg.getLogger().addHandler(lg.StreamHandler())
 
-# logging levels: DEBUG, INFO, WARNING, ERROR
-
-lg.info('This is an info message')
-lg.debug('This is a debugging message')
-lg.warning('This is a warning!')
-lg.error('This is an error message')
+lg.info('Log initialized')
