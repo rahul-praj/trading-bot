@@ -24,6 +24,6 @@ def initialize_logger():
 
     # log parameters
 
-    lg.basicConfig(filename=log_name, format = '%(asctime)s: %(message)s', level = lg.DEBUG)
+    lg.basicConfig(filename=currentLog_path, format = '%(asctime)s: - %(levelname)s: %(message)s', level = lg.DEBUG)
 
     lg.info('Log initialized')
