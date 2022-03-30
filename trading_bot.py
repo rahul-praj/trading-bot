@@ -22,22 +22,22 @@
 # STEP 1: load 5 min candles
   # IN: asset, time range, candle size
   # OUT: open, high, close and low data for the candles
-  IF fails, go back to start of loop
+  #IF fails, go back to start of loop
 
 # STEP 2: get instant trend analysis
   # IN: output of general trend analysis (string), 5 min candle data
   # OUT: TRUE (confirmed) / FALSE (not confirmed)
-  IF fails, go back to start of loop
+  #IF fails, go back to start of loop
 
 # STEP 3: perform RSI analysis
   # IN: output of general trend analysis (string), 5 min candle data
   # OUT: TRUE (confirmed) / FALSE (not confirmed)
-  IF fails, go back to start of loop
+  #IF fails, go back to start of loop
 
 # STEP 4: perform stochastic analysis
   # IN: output of general trend analysis (string), 5 min candle data
   # OUT: TRUE (confirmed) / FALSE (not confirmed)
-  IF fails, go back to start of loop
+  #IF fails, go back to start of loop
 
 
 # SUBMIT order:
@@ -58,11 +58,11 @@
     # IN: Current gains (losses)
     # OUT: True / False
   # ELIF check stoch crossing (pull OHLC data) IF TRUE --> close POSITION
-    Step 1: Pull 5 min OHLC data
+    #Step 1: Pull 5 min OHLC data
     # IN: Asset
     # OUT: OHLC data (5 min candles)
 
-    Step 2: see whether stochastic curves are crossing
+    #Step 2: see whether stochastic curves are crossing
     # IN: OHLC data
     # OUT: True / False
 
