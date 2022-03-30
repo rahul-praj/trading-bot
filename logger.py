@@ -17,7 +17,7 @@ def initialize_logger():
 
     # rename each log depending on the timeout
 
-    current = datetime.now().strftime("%Y%m%d_%H:%M:%S")
+    current = datetime.now().strftime("%Y%m%d_%H%M%S")
     log_name = current + '.log'
     currentLog_path = logs_path + log_name
 
