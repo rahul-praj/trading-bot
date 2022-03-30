@@ -1,5 +1,4 @@
-#!/usr/birn/#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# encoding: utf-8
 
 import logging as lg
 import os
