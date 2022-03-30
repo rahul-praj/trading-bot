@@ -11,7 +11,7 @@ def initialize_logger():
     logs_path = './logs' # define the path
     try:
         os.mkdir(logs_path)
-    except:
+    except OSError:
         print('Creation of directory %s failed' % logs_path)
     else:
         print("Successfully created log directory")
