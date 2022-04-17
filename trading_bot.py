@@ -4,7 +4,6 @@
 import alpaca_trade_api as tradeapi
 
 import sys, os, time, pytz
-import tulipy as ti
 import pandas as pd
 
 from datetime import datetime
@@ -38,10 +37,10 @@ class Trader():
             # OUT: stop loss
 
         try:
-            if trend = 'long':
+            if trend == 'long':
                 stopLoss = entryPrice - (entryPrice * gvars.stopLossMargin)
                 return stopLoss
-            elif trend = 'short':
+            elif trend == 'short':
                 stopLoss = entryPrice + (entryPrice * gvars.stopLossMargin)
                 return stopLoss
             else:
@@ -59,11 +58,11 @@ class Trader():
         # OUT: take profit
 
         try:
-            if trend = 'long':
+            if trend == 'long':
                 takeprofit = entryPrice + (entryPrice * gvars.takeProfitMargin)
                 lg.info('Take profit set for long at %2f' % takeprofit)
                 return takeprofit
-            elif trend = 'short':
+            elif trend == 'short':
                 takeprofit = entryPrice - (entryPrice * gvars.takeProfitMargin)
                 lg.info('Take profit set for short at %2f' % takeprofit)
                 return takeprofit
@@ -207,7 +206,7 @@ class Trader():
                 ema26 = ti.ema(data, 26)
                 ema50 = ti.ema(data, 50)
 
-                lg.info('%s instant trend EMAs = [%.2f, %.2f, %.2f]', % (ticker, ema9, ema26, ema50))
+                lg.info('%s instant trend EMAs = [%.2f, %.2f, %.2f]' % (ticker, ema9, ema26, ema50))
 
                 if (trend == 'long') and (ema9 > ema26) and (ema26 > ema50):
                     lg.info('Long trend confirmed for %s' % ticker)
@@ -242,7 +241,7 @@ class Trader():
             while True:
                 rsi = ti.rsi(data, 14)
 
-                lg.info('%s rsi = [%.2f]', % (ticker, rsi))
+                lg.info('%s rsi = [%.2f]' % (ticker, rsi))
 
                 if (trend == 'long') and (rsi > 50) and (rsi < 80):
                     lg.info('Long trend confirmed for %s' % ticker)
@@ -277,12 +276,12 @@ class Trader():
             while True:
                 stoch_d, stoch_k = ti.stoch(high, low, close, 9, 6, 9)
 
-                lg.info('%s stochastic = [%.2f, %.2f]', % (ticker, stoch_h, stoch_d))
+                lg.info('%s stochastic = [%.2f, %.2f]' % (ticker, stoch_h, stoch_d))
 
                 if (trend == 'long') and (stoch_k > stoch_d) and (stoch_k < 80) and (stoch_d < 80):
                     lg.info('Long trend confirmed for %s' % ticker)
                     return True
-                elif (trend == 'short') and (stoch_k < stoch_d) and (stoch_k > 20) and (stoch_d > 20)::
+                elif (trend == 'short') and (stoch_k < stoch_d) and (stoch_k > 20) and (stoch_d > 20):
                     lg.info('Short trend confirmed for %s' % ticker)
                     return False
                 elif attempt <= maxAttempts:
@@ -305,7 +304,7 @@ class Trader():
     def check_stochastic_crossing(self, ticker, trend):
         stoch_d, stoch_k = ti.stoch(high, low, close, 9, 6, 9)
 
-        lg.info('%s stochastic = [%.2f, %.2f]', % (ticker, stoch_h, stoch_d))
+        lg.info('%s stochastic = [%.2f, %.2f]' % (ticker, stoch_h, stoch_d))
 
         try:
             if (trend == 'long') and (stoch_k <= stoch_d):
@@ -378,8 +377,8 @@ class Trader():
           # OUT: True (exists) / False (does not exist)
 
           if check_position(self.ticker, notFound = True):
-              lg.info('Open position exists, aborting...')
-              return False
+            lg.info('Open position exists, aborting...')
+            return False
 
             #POINT DELTA
 
