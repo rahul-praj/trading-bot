@@ -5,29 +5,36 @@ from trading_bot import *
 from logger import *
 import sys
 
-# initialize the logger
-initialize_logger()
+from alpaca_trade_api.rest import REST, TimeFrame
+
+import gvars
 
 # check my trading account
-def account_check():
+def account_check(api):
     try:
-        # get account info
+        account = api.get_account()
+        if account.status == 'ACTIVE':
+            lg.info('Account is not active')
+            sys.exit()
     except Exception as e:
         lg.error('Could not get account error')
         lg.info(str(e))
         sys.exit()
 
+    import pdb; pdb.set_trace()
+
 # close current orders
-def clean_open_orders():
-    # get list of open clean_open_orders
-    lg.info('List of open orders')
-    lg.info(str(open_orders))
+def clean_open_orders(api):
 
-    for order in clean_open_orders:
-        #close order
-        lg.info('Order %s closed' % str(order.id))
+    lg.info('Cancelling all orders')
 
-    lg.info('Closing orders complete')
+    try:
+        api.cancel_all_orders()
+        lg.info('All orders cancelled')
+    except Exception as e:
+        lg.error('Error cancelling orders')
+        lg.error(e)
+        sys.exit()
 
 # define assets
     # IN: keyboard
@@ -36,13 +43,15 @@ def clean_open_orders():
 # execute trading bot
 def main():
 
+    api = tradeapi.REST(gvars.API_KEY, gvars.API_SECRET_KEY, gvars.API_URL)
+
     initialize_logger()
 
 # check account
-    account_check()
+    account_check(api)
 
 # close current orders
-    clean_open_orders()
+    clean_open_orders(api)
 
     ticker = input('Ticker of asset: ')
 
