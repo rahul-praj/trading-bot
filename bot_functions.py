@@ -16,6 +16,8 @@ from datetime import datetime, timedelta
 from scipy.signal import argrelextrema
 from logger import *
 import sys, os, time, pytz
+from pandas_datareader import data as pdr
+import fix_yahoo_finance
 
 import alpaca_trade_api as tradeapi
 from alpaca_trade_api.rest import REST, TimeFrame, TimeFrameUnit
@@ -38,13 +40,15 @@ class Trader:
         self.takeProfitMargin = 0.1 # percentage margin for the take profit
         self.max_equity = 1000
 
-    def historical_data(self, ticker, interval=1, limit=3000, n=10):
+    def historical_data(self, ticker, interval=720, n=10):
 
-        timeNow = datetime.now(pytz.timezone('US/Eastern')) - timedelta(minutes = 15)
-        timeStart = timeNow - timedelta(days = interval * limit)
+        timeNow = dt.datetime.today().strftime("%Y-%m-%d")
+        timeStart = timeNow - timedelta(days = )
 
-        data = self.api.get_bars(ticker, TimeFrame(interval,TimeFrameUnit.Day), start=timeStart.isoformat(),
-                                 end = timeNow.isoformat(), limit=limit).df
+        data = pdr.get_data_yahoo(ticker, start=timseStart, end=timeNow)
+
+        cols = ['date', 'open', 'high', 'low', 'raw_close', 'volume', 'close']
+        data.reindex(columns=cols)
 
         data['normalised_price'] = (data['close'] - data['low']) / (data['high'] - data['low'])
 
@@ -102,7 +106,7 @@ class Trader:
 
             #Set up random search parameters to tune
 
-            random_cv = RandomizedSearchCV(log, param_rand, cv = 5)
+            random_cv = RandomizedSearchCV(log, param_rand, n_iter = 500, cv = 5)
 
             random_cv.fit(train_x, train_y)
 
@@ -252,8 +256,6 @@ class Trader:
                 )
 
     def run(self,ticker):
-
-    #POINT DELTA: LOOP until timeout reached (ex. 2h)
 
         trend = self.ml_function(ticker)
 
