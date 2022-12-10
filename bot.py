@@ -5,7 +5,7 @@ from trading_bot import *
 from logger import *
 import sys
 
-from alpaca_trade_api.rest import REST, TimeFrame
+import alpaca_trade_api as tradeapi
 
 import gvars
 
@@ -13,15 +13,13 @@ import gvars
 def account_check(api):
     try:
         account = api.get_account()
-        if account.status == 'ACTIVE':
-            lg.info('Account is not active')
+        if account.status != 'ACTIVE':
+            lg.error('Account is not active')
             sys.exit()
     except Exception as e:
         lg.error('Could not get account error')
         lg.info(str(e))
         sys.exit()
-
-    import pdb; pdb.set_trace()
 
 # close current orders
 def clean_open_orders(api):
@@ -36,9 +34,21 @@ def clean_open_orders(api):
         lg.error(e)
         sys.exit()
 
-# define assets
-    # IN: keyboard
-    # OUT:  string
+def check_asset_ok(api, ticker):
+    # check asset is ok for trading
+        # IN: ticker
+    try:
+        asset = api.get_asset(ticker)
+        if asset.tradable:
+            lg.info('Asset exists and is tradeable')
+            return True
+        else:
+            lg.info('Asset exists but not tradeable')
+    except Exception as e:
+        lg.error('Asset does not exist, error')
+        lg.error(e)
+        sys.exit()
+
 
 # execute trading bot
 def main():
@@ -53,10 +63,15 @@ def main():
 # close current orders
     clean_open_orders(api)
 
-    ticker = input('Ticker of asset: ')
+    # ticker = input('Ticker of asset: ')
+    ticker = 'TSLA'
 
-    trader = Trader(ticker)
-    tradingSuccess = trader.run()
+    import pdb; pdb.set_trace()
+
+    check_asset_ok(api, ticker)
+
+    trader = Trader(ticker, api)
+    tradingSuccess = trader.run(ticker)
 
     if not tradingSuccess:
         lg.info('Trading was not successful, locking asset')

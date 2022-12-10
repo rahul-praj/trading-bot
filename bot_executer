@@ -1,13 +1,14 @@
 # encoding: utf-8
 
 # import needed libraries
-import bot_functions
-from bot_functions import *
+from traderlib import *
 from logger import *
 import sys
 
 import alpaca_trade_api as tradeapi
 from alpaca_trade_api.rest import REST
+
+import gvars
 
 # check our trading account
 def check_account_ok(api):
@@ -54,7 +55,7 @@ def check_asset_ok(api,ticker):
 # execute trading bot
 def main():
 
-    api = tradeapi.REST(bot_functions.API_KEY, bot_functions.API_SECRET_KEY, bot_functions.API_URL, api_version='v2')
+    api = tradeapi.REST(gvars.API_KEY, gvars.API_SECRET_KEY, gvars.API_URL, api_version='v2')
 
     # OUT: boolean tradingSuccess (True = success / False = failure)
 
@@ -69,32 +70,21 @@ def main():
 
     # get ticker
     #ticker = input('Write the ticker you want to operate with: ')
-    ticker = 'SPY'
+    ticker = 'AAPL'
 
     check_asset_ok(api,ticker)
 
-    trader = Trader(ticker, api) # initialize trading bot
-
-    pd.set_option('display.max_rows', 1500)
-
-    trend = trader.ml_function(ticker)
-
-    data = trader.historical_data(ticker, n=10)
-
-    data.to_csv('Historical_data.csv')
-
-    import pdb; pdb.set_trace()
+    trader = Trader(ticker,api) # initialize trading bot
 
     while True:
-
         tradingSuccess = trader.run(ticker) # run trading bot library
 
         if not tradingSuccess:
             lg.info('Trading was not successful, locking asset')
-            time.sleep(60*60)
+            time.sleep(gvars.sleepTimeME)
         else:
             lg.info('Trading was successful!')
-            time.sleep(60*60)
+            time.sleep(gvars.sleepTimeME)
 
 if __name__ == '__main__':
     main()
