@@ -12,11 +12,12 @@ import seaborn as sns
 import statsmodels.api as sm
 import pytz
 import tulipy as ti
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from scipy.signal import argrelextrema
 from logger import *
 import sys, os, time, pytz
 from sklearn import metrics
+import yfinance as yf
 
 from alpha_vantage.timeseries import TimeSeries
 import alpaca_trade_api as tradeapi
@@ -44,44 +45,15 @@ class Trader:
 
     def historical_data(self, ticker, n=10):
 
-        ts = TimeSeries(key=alpha_vantage_api, output_format='pandas')
-        data, meta = ts.get_intraday(symbol = ticker, interval = '30min')
+        #ts = TimeSeries(key=alpha_vantage_api, output_format='pandas')
+        #data, meta = ts.get_intraday(symbol = ticker, interval = '30min')
+
+        end = date.today()
+        start = end - datetime.timedelta(days = 5 * 365)
+
+        data = yf.download(ticker, start, end)
 
         data.reset_index(inplace=True)
-
-        data.rename(columns={'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'}, inplace=True)
-
-        data['normalised_price'] = (data['close'] - data['low']) / (data['high'] - data['low'])
-
-        lmax = data.iloc[argrelextrema(data['close'].values, np.greater_equal, order = n)[0]]['close']
-        lmin = data.iloc[argrelextrema(data['close'].values, np.less_equal, order = n)[0]]['close']
-
-        data['lmax'] = pd.DataFrame(lmax)
-        data['lmin'] = pd.DataFrame(lmin)
-
-        data.reset_index(inplace=True)
-
-        rsi = ti.rsi(data['close'].to_numpy(), 8)
-        stoch_k, stoch_d = ti.stoch(data['high'].to_numpy(), data['low'].to_numpy(), data['close'].to_numpy(), 5, 3, 3)
-        ema = ti.ema(data['close'].to_numpy(), 8)
-
-        df = pd.DataFrame()
-
-        df['rsi'] = pd.DataFrame(rsi)
-        df['stoch_k'] = pd.DataFrame(stoch_k)
-        df['stoch_d'] = pd.DataFrame(stoch_d)
-        df['ema'] = pd.DataFrame(ema)
-
-        df1 = pd.DataFrame([[np.nan] * len(df.columns)], columns=df.columns)
-        df1 = df1.loc[df1.index.repeat(8)].reset_index(drop=True)
-
-        df = df1.append(df, ignore_index=True)
-
-        data = pd.concat([data, df], axis=1)
-
-        data['target'] = np.where(data['lmin'].isnull(), 1, 0)
-
-        data.dropna(subset=['rsi', 'stoch_k', 'stoch_d', 'normalised_price'], inplace=True)
 
         return data
 

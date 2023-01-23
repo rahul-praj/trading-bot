@@ -1,8 +1,8 @@
 # encoding: utf-8
 
 # import needed libraries
-import bot_functions
-from bot_functions import *
+import bot_functions_new
+from bot_functions_new import *
 from logger import *
 import sys
 
@@ -79,11 +79,13 @@ def main():
 
     trend = trader.ml_function(ticker)
 
+    import pdb; pdb.set_trace()
+
     data = trader.historical_data(ticker, n=10)
 
-    data.to_csv('Historical_data.csv')
+    print(data)
 
-    import pdb; pdb.set_trace()
+    data.to_csv('Historical_data.csv')
 
     while True:
 
